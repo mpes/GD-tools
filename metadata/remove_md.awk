@@ -1,4 +1,4 @@
-#!/usr/local/bin/awk -F "" -f
+#!/usr/local/bin/awk -f
 
 # Author: 	Michal Pesicka, GoodData
 # Desc: 	Tool using AWK and SED for removing unused metadata created in CloudConnect (C)GoodData
