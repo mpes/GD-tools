@@ -2,19 +2,25 @@
 
 # Author: 	Michal Pesicka, GoodData
 # Desc: 	Tool using AWK and SED for removing unused metadata created in CloudConnect (C)GoodData
+# Version:	0.2
 # usage: 	remove_md.awk metadata.grf
 # 		 	remove_md.awk metadata.grf -nobackup
 # -----------------------------------------------------------------
 BEGIN{
-	skip = 0;
-	input = ARGV[1];
-	for (i = 0; i < ARGC; i++)
+	tmpfilecreated = 0;
+	for (i = 0; i < ARGC; i++) {
+		print i,ARGV[i];
 		if (  ARGC == 1 || ARGV[i] == "-h" || ARGV[2] == "--help") { # show help
 				print "Removes obsolete metadata from graph. Use the filename of graph as a parameter.";
+				print "Usage: remove_md.awk [ file ] | [ -n | -nobackup ]";
 				print "Backups are created by default with _bckp suffix.";
 				print "To change this behaviour use -n or --nobackup option. ";
 				exit 0;
 			}
+	}
+
+	skip = 0;
+	input = ARGV[1];
 	if (ARGC < 3) {
 		system("cp '" input "' '" input "_bckp'");
 		#output;
@@ -32,7 +38,8 @@ BEGIN{
 	metadata = "sed -ne 's/^\\<Edge.*metadata\\=\"\\([0-9a-zA-Z_]*\\)\".*\\>/\\1/p' -e 's/^\\<LookupTable .* metadata\\=\"\\([0-9a-zA-Z_]*\\)\".*\\>/\\1/p'  '" input "' "; 
 	while (( (metadata) | getline) > 0){ 
 		a[$0] = a[$0] + 1;
-	} 
+	}
+	tmpfilecreated = 1;
 }
 /^<Metadata\ *id=\"[0-9a-zA-Z_]*\".*>/{
 	skip = 1;
@@ -42,17 +49,19 @@ BEGIN{
 	sub(/^id\=\"/, "", edge);
 	sub(/\"/, "", edge);
 	sub(/\>/, "", edge);
+	#print ":",edge,":";
 	if (a[edge] > 0) 
 		skip = 0
 	else 
 		print "removed:", edge > "/dev/stderr"; 
 }
-{
-	if (!skip) print $0 > input;
+{	#print skip, $0;
+	if (!skip) print $0 > "/tmp/remove_md.tmp"; # must write into temp as we cannot use read and write on the same file 
 }
 /<\/Metadata>/{
 	skip = 0;
 }
 END {
 	close(metadata)
+	if (tmpfilecreated) system("mv -f /tmp/remove_md.tmp '" input "'"); # rewrite original file with the one cleaned
 }
