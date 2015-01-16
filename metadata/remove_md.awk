@@ -19,7 +19,6 @@ BEGIN{
 			}
 	if (ARGC < 3) {
 		system("cp '" input "' " input "_bckp");
-		output;
 	}
 	else {
 		if (ARGV[2] == "-n" || ARGV[2] == "--nobackup") { # do not create backup files
@@ -46,7 +45,7 @@ BEGIN{
 	if (a[edge] > 0) 
 		skip = 0
 	else 
-		print "removed metadata:", edge > "/dev/stderr"; 
+		print "removed:", edge > "/dev/stderr"; 
 }	
 /<\/Metadata>/{
 	skip = 0;
