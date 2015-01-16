@@ -8,21 +8,20 @@
 BEGIN{
 	skip = 0;
 	input = ARGV[1];
-	output = input;
-	metadata = "sed -ne 's/^\\<Edge.*metadata\\=\"\\([0-9a-zA-Z_]*\\)\".*\\>/\\1/p' -e 's/^\\<LookupTable .* metadata\\=\"\\([0-9a-zA-Z_]*\\)\".*\\>/\\1/p'  '" input "' "; 
 	for (i = 0; i < ARGC; i++)
-		if (ARGV[i] == "-h" || ARGV[2] == "--help") { # show help
+		if (  ARGC == 1 || ARGV[i] == "-h" || ARGV[2] == "--help") { # show help
 				print "Removes obsolete metadata from graph. Use the filename of graph as a parameter.";
 				print "Backups are created by default with _bckp suffix.";
 				print "To change this behaviour use -n or --nobackup option. ";
 				exit 0;
 			}
 	if (ARGC < 3) {
-		system("cp '" input "' " input "_bckp");
+		system("cp '" input "' '" input "_bckp'");
+		#output;
 	}
 	else {
 		if (ARGV[2] == "-n" || ARGV[2] == "--nobackup") { # do not create backup files
-			output = input;
+			#output = input;
 		}		
 		else {
 			print "\033[22;31mParametr is incorrect. Use -h for help. Quitting... \033[0m" > "/dev/stderr";
@@ -30,6 +29,7 @@ BEGIN{
          }
 	   	delete ARGV[2]; # to avoid treating params as another filename
 	}
+	metadata = "sed -ne 's/^\\<Edge.*metadata\\=\"\\([0-9a-zA-Z_]*\\)\".*\\>/\\1/p' -e 's/^\\<LookupTable .* metadata\\=\"\\([0-9a-zA-Z_]*\\)\".*\\>/\\1/p'  '" input "' "; 
 	while (( (metadata) | getline) > 0){ 
 		a[$0] = a[$0] + 1;
 	} 
@@ -46,7 +46,10 @@ BEGIN{
 		skip = 0
 	else 
 		print "removed:", edge > "/dev/stderr"; 
-}	
+}
+{
+	if (!skip) print $0 > input;
+}
 /<\/Metadata>/{
 	skip = 0;
 }
