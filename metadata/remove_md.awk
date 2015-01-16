@@ -1,4 +1,4 @@
-#!/usr/local/bin/awk -f
+#!/usr/bin/awk -f
 
 # Author: 	Michal Pesicka, GoodData
 # Desc: 	Tool using AWK and SED for removing unused metadata created in CloudConnect (C)GoodData
@@ -37,7 +37,12 @@ BEGIN{
 }
 /^<Metadata\ *id=\"[0-9a-zA-Z_]*\".*>/{
 	skip = 1;
-	edge = gensub(/^<Metadata\ *id=\"([0-9a-zA-Z_]+)\".*/, "\\1", "1");
+	#edge = gensub(/^<Metadata\ *id=\"([0-9a-zA-Z_]+)\".*/, "\\1"); 
+	#gensub() is not in all awk distributions so we must use this workaround
+	edge = $2; #id is on the second position
+	sub(/^id\=\"/, "", edge);
+	sub(/\"/, "", edge);
+	sub(/\>/, "", edge);
 	if (a[edge] > 0) 
 		skip = 0
 	else 
