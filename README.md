@@ -18,9 +18,11 @@ Use with caution! Report bugs.
 
 Examples
 --------
+./remove_md.awk
 ./remove_md.awk /Users/test-project/graph/metadata.grf 
 ./remove_md.awk /Users/test-project/graph/metadata.grf -nobackup
 ./remove_md.awk /Users/test-project/graph/metadata.grf 2> log.txt
+
 Notes
 -----
 Uses /tmp/remove_md.tmp as a temporary file.
