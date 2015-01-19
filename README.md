@@ -23,6 +23,9 @@ Examples
 ./remove_md.awk /Users/test-project/graph/metadata.grf -nobackup
 ./remove_md.awk /Users/test-project/graph/metadata.grf 2> log.txt
 
+To process all files in a directory use: 
+for f in *.grf; do ./remove_md.awk \"$f\";  done
+
 Notes
 -----
 Uses /tmp/remove_md.tmp as a temporary file.

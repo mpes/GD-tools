@@ -12,6 +12,7 @@ BEGIN{
 		if (  ARGC == 1 || ARGV[i] == "-h" || ARGV[2] == "--help") { # show help
 				print "Removes obsolete metadata from graph. Use the filename of graph as a parameter.";
 				print "Usage: remove_md.awk [ file ] | [ -n | -nobackup | -h | --help ]";
+				print "To process all files in a directory use: for f in *.grf; do ./remove_md.awk \"$f\";  done";
 				print "Backups are created by default with _bckp suffix.";
 				print "To change this behaviour use -n or --nobackup option. ";
 				exit 0;
@@ -19,7 +20,7 @@ BEGIN{
 	}
 	skip = 0;
 	input = ARGV[1];
-	if( system( "[ -f " input " ] ") != 0 ) { 
+	if( system( "[ -f \"" input "\" ] ") != 0 ) { 
 		print "\033[22;31mError: File " input " does not exists.\033[0m" > "/dev/stderr";
 		exit 1;
 	}
