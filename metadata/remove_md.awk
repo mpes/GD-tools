@@ -8,9 +8,6 @@
 # -----------------------------------------------------------------
 BEGIN{
 	tmpfilecreated = 0;
-	print "0:",ARGV[0];
-	print "1:",ARGV[1];
-	print "2:",ARGV[2];
 	for (i = 0; i < ARGC; i++) {
 		if (  ARGC == 1 || ARGV[i] == "-h" || ARGV[2] == "--help") { # show help
 				print "Removes obsolete metadata from graph. Use the filename of graph as a parameter.";
