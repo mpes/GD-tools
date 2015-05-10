@@ -18,6 +18,7 @@ BEGIN{
 				exit 0;
 			}
 	}
+	
 	skip = 0;
 	input = ARGV[1];
 	if( system( "[ -f \"" input "\" ] ") != 0 ) { 
